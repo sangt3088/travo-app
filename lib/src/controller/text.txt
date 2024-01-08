@@ -1,0 +1,32 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+// Replace with your API URL
+final String apiUrl = 'https://your-api-url.com';
+
+Future<List<Map<String, dynamic>>> fetchDataFromApi() async {
+  final response = await http.get(Uri.parse('$apiUrl/data'));
+
+  if (response.statusCode == 200) {
+    final List<dynamic> data = json.decode(response.body);
+    return data.cast<Map<String, dynamic>>();
+  } else {
+    throw Exception('Failed to load data from API');
+  }
+}
+
+void postDataToApi(Map<String, dynamic> data) async {
+  final response = await http.post(
+    Uri.parse('$apiUrl/data'),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+    body: jsonEncode(data),
+  );
+
+  if (response.statusCode == 201) {
+    // Data posted successfully
+  } else {
+    throw Exception('Failed to post data to API');
+  }
+}
